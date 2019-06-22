@@ -11,7 +11,7 @@ class UserBloc {
   fetchUser() async {
     UserModel userModel = await _repository.fetchUser();   
     print('this is working'); 
-    print(userModel);
+    print(userModel.userEmail);
     _userFetcher.sink.add(userModel); 
   }
 
