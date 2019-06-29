@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+lib/expriments.dart
 
 #notes
 notes.txt

@@ -33,7 +33,7 @@ class _RegisterState extends State<Register> {
               child: Text('Register New User'),
             ),
             RaisedButton(
-              onPressed: userBloc.fetchUser,
+              onPressed: userBloc.fetchDummyUser,
               child: Text('Fetch Dummy User'),
             ),
           ],

@@ -4,14 +4,17 @@ import '../models/user.dart';
 
 class UserBloc {
   final _repository = Repository();
-  final _userFetcher = PublishSubject<UserModel>();
+  final _userFetcher = BehaviorSubject<UserModel>();
+
+  //New code
+  final _user = BehaviorSubject<UserModel>();
 
   Observable<UserModel> get signleUser => _userFetcher.stream;
 
-  fetchUser() async {
+  fetchDummyUser() async {
     UserModel userModel = await _repository.fetchUser();   
     print('this is working'); 
-    print(userModel.userEmail);
+    print(userModel.user);
     _userFetcher.sink.add(userModel); 
   }
 
