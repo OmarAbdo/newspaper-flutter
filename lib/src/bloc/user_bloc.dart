@@ -6,8 +6,13 @@ class UserBloc {
   final _repository = Repository();
   final _userFetcher = BehaviorSubject<UserModel>();
 
-  //New code
+  /// how about having a user stream that can menipulate its internal props like objects?
+  //StreamController
   final _user = BehaviorSubject<UserModel>();
+  //Stream
+  Stream get userFullNameStream  => _user.stream;
+  //Sink 
+  Function get changeUserFullName => _user.sink.add;
 
   Observable<UserModel> get signleUser => _userFetcher.stream;
 
