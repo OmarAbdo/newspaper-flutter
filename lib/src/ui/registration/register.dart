@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/user.dart';
+import '../../bloc/dummy_user_bloc.dart';
 import '../../bloc/user_bloc.dart';
 import '../custom/custom.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart
 //DatePicker Values
 const String MIN_DATETIME = '1920-01-01';
 const String MAX_DATETIME = '2099-12-31';
-const String INIT_DATETIME = '2019-01-01';
+const String INIT_DATETIME = '2019-01-01'; // Make it today later
 
 class Register extends StatefulWidget {
   @override
@@ -49,7 +50,7 @@ class _RegisterState extends State<Register> {
                 children: <Widget>[
                   GradientText(txt: 'Welcome To', fontSize: 48),
                   ColorText(txt: 'Newspaper', fontSize: 64),
-                  _fullNameTextField(),
+                  _fullNameTextField(),               
                   _emailTextField(),
                   _passwordTextField(),
                   _repeatPasswordTextField(),
@@ -61,12 +62,16 @@ class _RegisterState extends State<Register> {
                 ],
               ),
             ),
+             RaisedButton(
+              onPressed: userBloc.submit,
+              child: Text('Submit User'),
+            ),
             RaisedButton(
               onPressed: null,
               child: Text('Register New User'),
             ),
             RaisedButton(
-              onPressed: userBloc.fetchDummyUser,
+              onPressed: dummyUserBloc.fetchDummyUser,
               child: Text('Fetch Dummy User'),
             ),
           ],
@@ -105,8 +110,9 @@ class _RegisterState extends State<Register> {
       onConfirm: (dateTime, List<int> index) {
         setState(() {
           _dateTime = dateTime;
+           userBloc.changeUserBirthday(dateTime);
         });
-      },
+      },      
     );
   }
 
@@ -128,10 +134,10 @@ class _RegisterState extends State<Register> {
 
   Widget _emailTextField() {
     return StreamBuilder(
-        stream: userBloc.userFullNameStream,
+        stream: userBloc.userEmailAddress,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return TextField(
-            onChanged: userBloc.changeUserFullName,
+            onChanged: userBloc.changeUserEmailAddress,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: 'Please Enter your Email address',
@@ -144,11 +150,11 @@ class _RegisterState extends State<Register> {
 
   Widget _passwordTextField() {
     return StreamBuilder(
-        stream: userBloc.userFullNameStream,
+        stream: userBloc.userPasswordStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return TextField(
             obscureText: true,
-            onChanged: userBloc.changeUserFullName,
+            onChanged: userBloc.changeUserPassword,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
               hintText: 'Please Enter your password',
@@ -161,11 +167,11 @@ class _RegisterState extends State<Register> {
 
   Widget _repeatPasswordTextField() {
     return StreamBuilder(
-        stream: userBloc.userFullNameStream,
+        stream: userBloc.userRepeatPasswordStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return TextField(
             obscureText: true,
-            onChanged: userBloc.changeUserFullName,
+            onChanged: userBloc.changeUserRepeatPassword,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
               hintText: 'Please Confirm Your password',
@@ -180,7 +186,7 @@ class _RegisterState extends State<Register> {
 
   Widget _countryPicker() {
     return StreamBuilder(
-        stream: userBloc.userFullNameStream,
+        stream: userBloc.userCountryStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return Center(
             child: CountryPicker(
@@ -188,6 +194,7 @@ class _RegisterState extends State<Register> {
               onChanged: (Country country) {
                 setState(() {
                   _selected = country;
+                  userBloc.changeUserCountry(country.name);
                 });
               },
               selectedCountry: _selected,
