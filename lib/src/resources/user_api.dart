@@ -7,7 +7,6 @@ class UserApi {
   Client client = Client();
 
   Future<UserModel> fetchUser() async {
-    //final response = await client.get("http://localhost:5000/api/v1/authentication/getdummyuser", headers: { 'Content-Type': 'application/json', });
     final response = await client.get("http://10.0.2.2:5000/api/v1/authentication/getdummyuser", headers: { 'Content-Type': 'application/json', });
     if (response.statusCode == 200) {
       // If the call to the server was successful, try to parse the JSON
@@ -18,15 +17,27 @@ class UserApi {
     }
   }
 
-  Future<String> registerUser(dynamic user) async {
+  Future<Map<String, dynamic>> registerUser(Map<String, dynamic> user) async {
+    var jsonUser = json.encode(user);
+
     final response = await client.post(
-        "http://localhost:5000/api/v1/authentication/signup",
+        "http://10.0.2.2:5000/api/v1/authentication/signup",
         headers: { 'Content-Type': 'application/json', },
-        body: user);
+        body: jsonUser);
+
     if (response.statusCode == 200) {
-      return 'User Created Successfully';
-    } else {
-      throw Exception('Faild to create user');
+      Map<String, dynamic> successReport = {
+        'massage'       : 'User created successfully',
+        'statusCode'    : response.statusCode
+      };
+      return successReport;
+    } else {      
+      Map<String, dynamic> errorReport = {
+        'massage'       : 'Falid to create user',
+        'statusCode'    : response.statusCode,
+        'body'          : response.body
+      };
+      return errorReport;
     }
   }
 }

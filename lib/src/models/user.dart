@@ -1,6 +1,7 @@
 class UserModel {
 
   Map<String, dynamic> _user;
+  dynamic _userAsJson;
 
   UserModel.fromJson(Map<String, dynamic> parsedJson) {
     _user = {

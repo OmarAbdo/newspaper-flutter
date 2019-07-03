@@ -1,9 +1,18 @@
 import 'dart:async';
+import 'dart:core';
 
 const String _kEmailRule = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
 const String _kPasswordRule = r"^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$";
 
 class FormValidation {
+
+  final StreamTransformer<String, String> validateFullName = StreamTransformer<String, String>.fromHandlers(handleData: (fullName, sink) {
+    if (fullName.length < 4) {
+      sink.addError('Name minimum length is 4 characters');
+    } else { 
+      sink.add(fullName);
+    }
+  });
 
   final StreamTransformer<String, String> validateEmail = StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
     final RegExp emailExp = new RegExp(_kEmailRule);
@@ -25,6 +34,22 @@ class FormValidation {
       sink.addError('Password can\'t be empty');
     } else {
       sink.add(password);
+    }
+  });
+
+  final StreamTransformer<String, String> validateContrySelected = StreamTransformer<String, String>.fromHandlers(handleData: (country, sink) {
+    if (!country.isEmpty) {
+      sink.addError('Please select your country');
+    } else { 
+      sink.add(country);
+    }
+  });
+
+  final StreamTransformer<DateTime, DateTime> validateBirthday = StreamTransformer<DateTime, DateTime>.fromHandlers(handleData: (birthday, sink) {
+    if (birthday.toString().isEmpty) {
+      sink.addError('Please select your birthday');
+    } else { 
+      sink.add(birthday);
     }
   });
   

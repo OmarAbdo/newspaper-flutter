@@ -7,5 +7,5 @@ class Repository {
 
   Future<UserModel> fetchUser() => userApi.fetchUser();
 
-  Future<String> registerUser(dynamic user) => userApi.registerUser(user);
+  Future<Map<String, dynamic>> registerUser(dynamic user) => userApi.registerUser(user);
 }

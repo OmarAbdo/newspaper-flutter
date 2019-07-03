@@ -1,12 +1,6 @@
 import '../resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
-import '../models/user.dart';
 import '../util/formvalidator.dart';
-
-/// To Do list
-/// 1. validate data using mixins and stream transforms ...on it
-/// 2. post everything safe and sound to the backend
-/// 3. BONUS check R code and do some recatoring in here if needed
 
 class UserBloc extends Object with FormValidation {
   final _repository = Repository();
@@ -18,7 +12,7 @@ class UserBloc extends Object with FormValidation {
   final _userCountry        = BehaviorSubject<String>();
   final _userBirthDay       = BehaviorSubject<DateTime>();
 
-  Observable<String> get userFullNameStream       => _userFullName.stream; // Stream
+  Observable<String> get userFullNameStream       => _userFullName.stream.transform(validateFullName); // Stream
   Observable<String> get userEmailAddress         => _userEmailAddress.stream.transform(validateEmail);
   Observable<String> get userPasswordStream       => _userPassword.stream.transform(validatePassword);
   Observable<String> get userRepeatPasswordStream => _userRepeatPassword.stream.transform(validatePassword).doOnData((String c){      
@@ -26,29 +20,38 @@ class UserBloc extends Object with FormValidation {
         _userRepeatPassword.addError("Password Does not Match"); // throwing an error if both passwords do not match
       }
     });
-  Observable<String> get userCountryStream        => _userCountry.stream;
-  Observable<DateTime> get userBirthDay           => _userBirthDay.stream;
+  Observable<String> get userCountryStream        => _userCountry.stream.transform(validateContrySelected);
+  Observable<DateTime> get userBirthDay           => _userBirthDay.stream.transform(validateBirthday);
 
   Function get changeUserFullName       => _userFullName.sink.add; // Sink
   Function get changeUserEmailAddress   => _userEmailAddress.sink.add;
   Function get changeUserPassword       => _userPassword.sink.add;
   Function get changeUserRepeatPassword => _userRepeatPassword.sink.add;
-
-  changeUserCountry(String country) {
-    _userCountry.sink.add(country);
-  }
+  Function get changeUserCountry       => _userCountry.sink.add;
 
   changeUserBirthday(DateTime birthday) {
     _userBirthDay.sink.add(birthday);
   }
 
-  submit() {
-    print(_userFullName.value);
-    print(_userEmailAddress.value);
-    print(_userPassword.value);
-    print(_userRepeatPassword.value);
-    print(_userCountry.value);
-    print(_userBirthDay.value);
+  String fixBirthdayFormat(DateTime birthday) {
+    var myDay   = birthday.day <= 9 ? "0" + birthday.day.toString() : birthday.day.toString();
+    var myMonth = birthday.month <= 9 ? "0" + birthday.month.toString() : birthday.month.toString();
+    var myYear  = birthday.year.toString();
+    return myDay + '/' + myMonth + '/' + myYear;
+  }
+
+  submit() async {
+    Map<String, dynamic> validatedUserMap = {
+      'name'            : _userFullName.value,
+      'email'           : _userEmailAddress.value,
+      'password'        : _userPassword.value,
+      'repeatPassword'  : _userRepeatPassword.value,
+      'country'         : _userCountry.value,
+      'birthday'        : fixBirthdayFormat(_userBirthDay.value), //find a more proper solution for this later  
+    };    
+
+    Map<String, dynamic> postResult = await _repository.registerUser(validatedUserMap); 
+    print(postResult);
   }
 
   /// just making dart happy

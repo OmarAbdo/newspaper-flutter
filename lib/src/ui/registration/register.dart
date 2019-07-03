@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import '../../models/user.dart';
 import '../../bloc/dummy_user_bloc.dart';
 import '../../bloc/user_bloc.dart';
 import '../custom/custom.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
-import 'dart:async';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+
+/// Later enhancements
+/// 1. make the INIT_DATETIME dynamiclly picks today instead of 2019-01-01
+/// 2. the birthday button should display only the date and it should be done in a proper way
+/// 3. only enable the submit button on all data validation
+/// 4. this including the date field displaying the initial value which it's not picked by the bloc too (either way initial value shouldn't be acceppted)
 
 //DatePicker Values
 const String MIN_DATETIME = '1920-01-01';
@@ -50,29 +54,28 @@ class _RegisterState extends State<Register> {
                 children: <Widget>[
                   GradientText(txt: 'Welcome To', fontSize: 48),
                   ColorText(txt: 'Newspaper', fontSize: 64),
-                  _fullNameTextField(),               
+                  _fullNameTextField(),
                   _emailTextField(),
                   _passwordTextField(),
                   _repeatPasswordTextField(),
                   _countryPicker(),
                   RaisedButton(
                     onPressed: _showDatePicker,
-                    child: Text("Pick your birthday $_dateTime"),
+                    child: Text("Pick your birthday $_dateTime."),
                   ),
                 ],
               ),
             ),
-             RaisedButton(
-              onPressed: userBloc.submit,
-              child: Text('Submit User'),
+            SizedBox(
+              height: 25,
             ),
             RaisedButton(
-              onPressed: null,
-              child: Text('Register New User'),
+              onPressed: userBloc.submit,
+              child: Text('Sign Up!'),
             ),
             RaisedButton(
               onPressed: dummyUserBloc.fetchDummyUser,
-              child: Text('Fetch Dummy User'),
+              child: Text('Already have an account?'),
             ),
           ],
         ),
@@ -91,8 +94,8 @@ class _RegisterState extends State<Register> {
       context,
       pickerTheme: DateTimePickerTheme(
         showTitle: _showTitle,
-        confirm: Text('custom Done', style: TextStyle(color: Colors.cyan)),
-        cancel: Text('custom cancel', style: TextStyle(color: Colors.red)),
+        confirm: Text('Pick Birthday', style: TextStyle(color: Colors.cyan)),
+        cancel: Text('Close Dialog', style: TextStyle(color: Colors.red)),
       ),
       minDateTime: DateTime.parse(MIN_DATETIME),
       maxDateTime: DateTime.parse(MAX_DATETIME),
@@ -110,9 +113,9 @@ class _RegisterState extends State<Register> {
       onConfirm: (dateTime, List<int> index) {
         setState(() {
           _dateTime = dateTime;
-           userBloc.changeUserBirthday(dateTime);
+          userBloc.changeUserBirthday(dateTime);
         });
-      },      
+      },
     );
   }
 
