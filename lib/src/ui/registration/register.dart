@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../bloc/dummy_user_bloc.dart';
-import '../../bloc/user_bloc.dart';
-import '../custom/custom.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+//local imports
+import 'package:flutter_newspaper/src/bloc/user_bloc.dart';
+import 'package:flutter_newspaper/src/ui/custom/custom.dart';
+import 'package:flutter_newspaper/src/ui/registration/login.dart';
 
 /// Later enhancements
 /// 1. make the INIT_DATETIME dynamiclly picks today instead of 2019-01-01
@@ -74,7 +75,9 @@ class _RegisterState extends State<Register> {
               child: Text('Sign Up!'),
             ),
             RaisedButton(
-              onPressed: dummyUserBloc.fetchDummyUser,
+              onPressed: () {
+                Navigator.pushNamed(context, '/login');
+              },
               child: Text('Already have an account?'),
             ),
           ],
