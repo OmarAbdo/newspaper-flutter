@@ -1,23 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_newspaper/src/ui/registration/register.dart';
-
 
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            Text('Login Screen'),
-            RaisedButton(
-              onPressed: () {
-               Navigator.pushNamed(context, '/');
-              },
-              child: Text('Create a new account'),
-            )
-          ],
+    return Scaffold(
+      body: Container(
+        child: Center(
+          child: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.all(25.0),
+            children: <Widget>[
+              Center(
+                child:  Text('Login Screen'),
+              ),
+              RaisedButton(
+                onPressed: () {},
+                child: Text('Sign in'),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/');
+                },
+                child: Text('Create a new account'),
+              ),
+            ],
+          ),
         ),
       ),
     );

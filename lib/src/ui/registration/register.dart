@@ -4,7 +4,6 @@ import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart
 //local imports
 import 'package:flutter_newspaper/src/bloc/user_bloc.dart';
 import 'package:flutter_newspaper/src/ui/custom/custom.dart';
-import 'package:flutter_newspaper/src/ui/registration/login.dart';
 
 /// Later enhancements
 /// 1. make the INIT_DATETIME dynamiclly picks today instead of 2019-01-01
@@ -44,49 +43,51 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.all(25.0),
-          children: <Widget>[
-            Center(
-              child: Column(
-                children: <Widget>[
-                  GradientText(txt: 'Welcome To', fontSize: 48),
-                  ColorText(txt: 'Newspaper', fontSize: 64),
-                  _fullNameTextField(),
-                  _emailTextField(),
-                  _passwordTextField(),
-                  _repeatPasswordTextField(),
-                  _countryPicker(),
-                  RaisedButton(
-                    onPressed: _showDatePicker,
-                    child: Text("Pick your birthday $_dateTime."),
-                  ),
-                ],
+    return Scaffold(
+      body: Container(
+        child: Center(
+          child: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.all(25.0),
+            children: <Widget>[
+              Center(
+                child: Column(
+                  children: <Widget>[
+                    GradientText(txt: 'Welcome To', fontSize: 48.0),
+                    ColorText(txt: 'Newspaper', fontSize: 64.0),
+                    _fullNameTextField(),
+                    EmailTextField(),
+                    PasswordTextField(),
+                    _repeatPasswordTextField(),
+                    _countryPicker(),
+                    RaisedButton(
+                      onPressed: _showDatePicker,
+                      child: Text("Pick your birthday $_dateTime."),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            RaisedButton(
-              onPressed: userBloc.submit,
-              child: Text('Sign Up!'),
-            ),
-            RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
-              },
-              child: Text('Already have an account?'),
-            ),
-          ],
+              SizedBox(
+                height: 25,
+              ),
+              RaisedButton(
+                onPressed: userBloc.submit,
+                child: Text('Sign Up!'),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+                child: Text('Already have an account?'),
+              ),
+            ],
+          ),
         ),
-      ),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/images/loginbg.jpg"),
-          fit: BoxFit.cover,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/loginbg.jpg"),
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
@@ -132,39 +133,6 @@ class _RegisterState extends State<Register> {
             decoration: InputDecoration(
               hintText: 'Please Enter your fullname',
               labelText: 'Full Name',
-              errorText: snapshot.error,
-            ),
-          );
-        });
-  }
-
-  Widget _emailTextField() {
-    return StreamBuilder(
-        stream: userBloc.userEmailAddress,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return TextField(
-            onChanged: userBloc.changeUserEmailAddress,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              hintText: 'Please Enter your Email address',
-              labelText: 'Email Address',
-              errorText: snapshot.error,
-            ),
-          );
-        });
-  }
-
-  Widget _passwordTextField() {
-    return StreamBuilder(
-        stream: userBloc.userPasswordStream,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return TextField(
-            obscureText: true,
-            onChanged: userBloc.changeUserPassword,
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              hintText: 'Please Enter your password',
-              labelText: 'Password',
               errorText: snapshot.error,
             ),
           );

@@ -8,9 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: newspaperTheme,
-      home: Scaffold(
-        body: Register(),
-      ),
+      home: Register(),
       initialRoute: '/',
       routes: allRoutes,
     );
