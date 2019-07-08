@@ -40,7 +40,7 @@ class UserBloc extends Object with FormValidation {
     return myDay + '/' + myMonth + '/' + myYear;
   }
 
-  submit() async {
+  submitSignUp() async {
     Map<String, dynamic> validatedUserMap = {
       'name'            : _userFullName.value,
       'email'           : _userEmailAddress.value,
@@ -51,6 +51,16 @@ class UserBloc extends Object with FormValidation {
     };    
 
     Map<String, dynamic> postResult = await _repository.registerUser(validatedUserMap); 
+    print(postResult);
+  }
+
+  submitLogIn() async {
+    Map<String, dynamic> validatedUserMap = {
+      'email'           : _userEmailAddress.value,
+      'password'        : _userPassword.value,
+    };    
+
+    Map<String, dynamic> postResult = await _repository.logInUser(validatedUserMap); 
     print(postResult);
   }
 

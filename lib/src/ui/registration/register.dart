@@ -71,7 +71,7 @@ class _RegisterState extends State<Register> {
                 height: 25,
               ),
               RaisedButton(
-                onPressed: userBloc.submit,
+                onPressed: userBloc.submitSignUp,
                 child: Text('Sign Up!'),
               ),
               RaisedButton(
