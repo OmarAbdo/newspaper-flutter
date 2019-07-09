@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_newspaper/src/ui/custom/custom.dart';
-import 'package:flutter_newspaper/src/bloc/user_bloc.dart';
+import 'package:flutter_newspaper/src/bloc/user_bloc_provider.dart';
 
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final userBloc = UserBlocProvider.of(context);
     return Scaffold(
       body: Container(
         color: Colors.red,
@@ -16,13 +16,13 @@ class Login extends StatelessWidget {
             children: <Widget>[
               GradientText(txt: 'Welcome To', fontSize: 48.0),
               ColorText(txt: 'Newspaper', fontSize: 64.0),
-              EmailTextField(),
-              PasswordTextField(),
+              EmailTextField(userBloc),
+              PasswordTextField(userBloc),
               SizedBox(
                 height: 25,
               ),
               RaisedButton(
-               onPressed: userBloc.submitLogIn,
+                onPressed: userBloc.submitLogIn,
                 child: Text('Sign in'),
               ),
               RaisedButton(

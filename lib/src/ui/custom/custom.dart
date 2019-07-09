@@ -47,9 +47,11 @@ class ColorText extends StatelessWidget {
 }
 
 class EmailTextField extends StatelessWidget {
+  final UserBloc userBloc;
+  EmailTextField(this.userBloc);
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    //final userBloc = UserBlocProvider.of(context);
     return StreamBuilder(
       stream: userBloc.userEmailAddress,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -68,9 +70,11 @@ class EmailTextField extends StatelessWidget {
 }
 
 class PasswordTextField extends StatelessWidget {
+  final UserBloc userBloc;
+  PasswordTextField(this.userBloc);
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    //final userBloc = UserBlocProvider.of(context);
     return StreamBuilder(
       stream: userBloc.userPasswordStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {

@@ -16,7 +16,7 @@ class UserBloc extends Object with FormValidation {
   Observable<String> get userEmailAddress         => _userEmailAddress.stream.transform(validateEmail);
   Observable<String> get userPasswordStream       => _userPassword.stream.transform(validatePassword);
   Observable<String> get userRepeatPasswordStream => _userRepeatPassword.stream.transform(validatePassword).doOnData((String c){      
-      if (0 != _userPassword.value.compareTo(c)){        
+      if (0 != _userPassword.value.compareTo(c)){
         _userRepeatPassword.addError("Password Does not Match"); // throwing an error if both passwords do not match
       }
     });
@@ -75,4 +75,3 @@ class UserBloc extends Object with FormValidation {
   }
 }
 
-final userBloc = UserBloc();

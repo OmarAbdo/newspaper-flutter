@@ -3,6 +3,7 @@ import 'package:flutter_country_picker/flutter_country_picker.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 //local imports
 import 'package:flutter_newspaper/src/bloc/user_bloc.dart';
+import 'package:flutter_newspaper/src/bloc/user_bloc_provider.dart';
 import 'package:flutter_newspaper/src/ui/custom/custom.dart';
 
 /// Later enhancements
@@ -43,6 +44,7 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+    final userBloc = UserBlocProvider.of(context);
     return Scaffold(
       body: Container(
         child: Center(
@@ -55,13 +57,15 @@ class _RegisterState extends State<Register> {
                   children: <Widget>[
                     GradientText(txt: 'Welcome To', fontSize: 48.0),
                     ColorText(txt: 'Newspaper', fontSize: 64.0),
-                    _fullNameTextField(),
-                    EmailTextField(),
-                    PasswordTextField(),
-                    _repeatPasswordTextField(),
-                    _countryPicker(),
+                    _fullNameTextField(userBloc),
+                    EmailTextField(userBloc),
+                    PasswordTextField(userBloc),
+                    _repeatPasswordTextField(userBloc),
+                    _countryPicker(userBloc),
                     RaisedButton(
-                      onPressed: _showDatePicker,
+                      onPressed: () {
+                        _showDatePicker(userBloc);
+                      },
                       child: Text("Pick your birthday $_dateTime."),
                     ),
                   ],
@@ -93,7 +97,7 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  void _showDatePicker() {
+  void _showDatePicker(UserBloc userBloc) {
     DatePicker.showDatePicker(
       context,
       pickerTheme: DateTimePickerTheme(
@@ -123,7 +127,7 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Widget _fullNameTextField() {
+  Widget _fullNameTextField(UserBloc userBloc) {
     return StreamBuilder(
         stream: userBloc.userFullNameStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -139,7 +143,7 @@ class _RegisterState extends State<Register> {
         });
   }
 
-  Widget _repeatPasswordTextField() {
+  Widget _repeatPasswordTextField(UserBloc userBloc) {
     return StreamBuilder(
         stream: userBloc.userRepeatPasswordStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -158,7 +162,7 @@ class _RegisterState extends State<Register> {
 
   Country _selected;
 
-  Widget _countryPicker() {
+  Widget _countryPicker(UserBloc userBloc) {
     return StreamBuilder(
         stream: userBloc.userCountryStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
