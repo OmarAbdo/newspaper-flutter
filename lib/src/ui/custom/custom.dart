@@ -57,8 +57,8 @@ class EmailTextField extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return TextField(
           onChanged: userBloc.changeUserEmailAddress,
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
+          keyboardType: TextInputType.emailAddress,          
+          decoration: InputDecoration(            
             hintText: 'Please Enter your Email address',
             labelText: 'Email Address',
             errorText: snapshot.error,

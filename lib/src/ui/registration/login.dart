@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_newspaper/src/ui/custom/custom.dart';
 import 'package:flutter_newspaper/src/bloc/user_bloc_provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -22,14 +23,22 @@ class Login extends StatelessWidget {
                 height: 25,
               ),
               RaisedButton(
-                onPressed: userBloc.submitLogIn,
+                onPressed: () {
+                  userBloc.submitLogIn(context);
+                },
                 child: Text('Sign in'),
               ),
               RaisedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/');
+                  Navigator.pushReplacementNamed(context, '/signup');
                 },
                 child: Text('Create a new account'),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  readToken().then((onValue) => print(onValue));
+                },
+                child: Text('Read token'),
               ),
             ],
           ),
@@ -37,4 +46,16 @@ class Login extends StatelessWidget {
       ),
     );
   }
+
+  // Create storage
+  final storage = new FlutterSecureStorage();
+  Future<String> readToken() async {
+    return await storage.read(key: 'token');
+  }
+  // storeSomething() async {
+  //   return await storage.write(key: 'something', value: 'something for test');
+  // }
+  //  Future<String>  readSomeThing() async {
+  //   return await storage.read(key: 'something');
+  // }
 }

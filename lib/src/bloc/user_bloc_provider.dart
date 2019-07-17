@@ -10,6 +10,8 @@ class UserBlocProvider extends InheritedWidget {
   bool updateShouldNotify(_) => true;
 
   static UserBloc of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(UserBlocProvider) as UserBlocProvider).userBloc;
-  }
+    return (context.inheritFromWidgetOfExactType(UserBlocProvider) as UserBlocProvider).userBloc;    
+    }
+    
 }
+ 

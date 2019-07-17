@@ -1,6 +1,9 @@
-import '../resources/repository.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import '../util/formvalidator.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'package:flutter_newspaper/src/resources/repository.dart';
+import 'package:flutter_newspaper/src/util/formvalidator.dart';
 
 class UserBloc extends Object with FormValidation {
   final _repository = Repository();
@@ -40,7 +43,7 @@ class UserBloc extends Object with FormValidation {
     return myDay + '/' + myMonth + '/' + myYear;
   }
 
-  submitSignUp() async {
+  submitSignUp(BuildContext context) async {
     Map<String, dynamic> validatedUserMap = {
       'name'            : _userFullName.value,
       'email'           : _userEmailAddress.value,
@@ -52,16 +55,32 @@ class UserBloc extends Object with FormValidation {
 
     Map<String, dynamic> postResult = await _repository.registerUser(validatedUserMap); 
     print(postResult);
+    final storage = new FlutterSecureStorage();
+    await storage.write(key: 'token', value: postResult['token']);
+
+    Navigator.pushReplacementNamed(context, '/profile');
   }
 
-  submitLogIn() async {
+  submitLogIn(BuildContext context) async {
     Map<String, dynamic> validatedUserMap = {
       'email'           : _userEmailAddress.value,
       'password'        : _userPassword.value,
     };    
 
     Map<String, dynamic> postResult = await _repository.logInUser(validatedUserMap); 
+    
     print(postResult);
+   
+    final storage = new FlutterSecureStorage();
+    await storage.write(key: 'token', value: postResult['token']);
+
+    Navigator.pushReplacementNamed(context, '/profile');
+  }
+
+  loginCheck() {
+    /// check if login token exists and is valid
+    /// if so, go to profile 
+    /// if not go to login page
   }
 
   /// just making dart happy

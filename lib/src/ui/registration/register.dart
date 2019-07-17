@@ -20,12 +20,12 @@ const String INIT_DATETIME = '2019-01-01'; // Make it today later
 class Register extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _RegisterState();
+    return _RegisterState();   
   }
 }
 
 class _RegisterState extends State<Register> {
-  bool _showTitle = true;
+  bool _showTitle = true; 
 
   DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
   List<DateTimePickerLocale> _locales = DateTimePickerLocale.values;
@@ -75,12 +75,14 @@ class _RegisterState extends State<Register> {
                 height: 25,
               ),
               RaisedButton(
-                onPressed: userBloc.submitSignUp,
+                onPressed: () {
+                  userBloc.submitSignUp(context);
+                },
                 child: Text('Sign Up!'),
               ),
               RaisedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/login');
+                  Navigator.pushReplacementNamed(context, '/');
                 },
                 child: Text('Already have an account?'),
               ),
