@@ -21,10 +21,22 @@ class UserBloc extends Object with FormValidation {
   Observable<String> get userRepeatPasswordStream => _userRepeatPassword.stream.transform(validatePassword).doOnData((String c){      
       if (0 != _userPassword.value.compareTo(c)){
         _userRepeatPassword.addError("Password Does not Match"); // throwing an error if both passwords do not match
+      } else {
+        return true;
       }
     });
   Observable<String> get userCountryStream        => _userCountry.stream.transform(validateContrySelected);
   Observable<DateTime> get userBirthDay           => _userBirthDay.stream.transform(validateBirthday);
+  Observable<bool> get validatedSignUp            => Observable.combineLatest4(
+                                                                  userFullNameStream, 
+                                                                  userEmailAddress,
+                                                                  userPasswordStream,
+                                                                  userRepeatPasswordStream,
+                                                                  //userCountryStream,
+                                                                  // userBirthDay,
+                                                                  (a, b, c, d) => true);
+
+  Observable<bool> get validatedSignIn            => Observable.combineLatest2(userEmailAddress, userPasswordStream, (a, b) => true);
 
   Function get changeUserFullName       => _userFullName.sink.add; // Sink
   Function get changeUserEmailAddress   => _userEmailAddress.sink.add;
@@ -55,6 +67,8 @@ class UserBloc extends Object with FormValidation {
 
     Map<String, dynamic> postResult = await _repository.registerUser(validatedUserMap); 
     print(postResult);
+
+    //only if status code is 200
     final storage = new FlutterSecureStorage();
     await storage.write(key: 'token', value: postResult['token']);
 
@@ -70,7 +84,8 @@ class UserBloc extends Object with FormValidation {
     Map<String, dynamic> postResult = await _repository.logInUser(validatedUserMap); 
     
     print(postResult);
-   
+
+   //only if status code is 200
     final storage = new FlutterSecureStorage();
     await storage.write(key: 'token', value: postResult['token']);
 
@@ -81,6 +96,7 @@ class UserBloc extends Object with FormValidation {
     /// check if login token exists and is valid
     /// if so, go to profile 
     /// if not go to login page
+    /// what if token is no longer valid and we move from a protected screen to another?
   }
 
   /// just making dart happy

@@ -38,7 +38,7 @@ class FormValidation {
   });
 
   final StreamTransformer<String, String> validateContrySelected = StreamTransformer<String, String>.fromHandlers(handleData: (country, sink) {
-    if (!country.isEmpty) {
+    if (country.isEmpty) {
       sink.addError('Please select your country');
     } else { 
       sink.add(country);

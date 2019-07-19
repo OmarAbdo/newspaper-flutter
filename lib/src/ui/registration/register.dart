@@ -20,12 +20,12 @@ const String INIT_DATETIME = '2019-01-01'; // Make it today later
 class Register extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _RegisterState();   
+    return _RegisterState();
   }
 }
 
 class _RegisterState extends State<Register> {
-  bool _showTitle = true; 
+  bool _showTitle = true;
 
   DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
   List<DateTimePickerLocale> _locales = DateTimePickerLocale.values;
@@ -74,12 +74,7 @@ class _RegisterState extends State<Register> {
               SizedBox(
                 height: 25,
               ),
-              RaisedButton(
-                onPressed: () {
-                  userBloc.submitSignUp(context);
-                },
-                child: Text('Sign Up!'),
-              ),
+              submitButton(userBloc),
               RaisedButton(
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, '/');
@@ -124,6 +119,7 @@ class _RegisterState extends State<Register> {
         setState(() {
           _dateTime = dateTime;
           userBloc.changeUserBirthday(dateTime);
+          //print('this is the date' + _dateTime.toString());
         });
       },
     );
@@ -169,17 +165,42 @@ class _RegisterState extends State<Register> {
         stream: userBloc.userCountryStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return Center(
-            child: CountryPicker(
-              showDialingCode: true,
-              onChanged: (Country country) {
-                setState(() {
-                  _selected = country;
-                  userBloc.changeUserCountry(country.name);
-                });
-              },
-              selectedCountry: _selected,
+            child: Column(
+              children: <Widget>[
+                CountryPicker(
+                  showDialingCode: false,
+                  showName: false,
+                  onChanged: (Country country) {
+                    setState(() {
+                      _selected = country;
+                      userBloc.changeUserCountry(country.name);
+                    });
+                  },
+                  selectedCountry: _selected,
+                 
+                ),
+                Text(snapshot.hasError ? snapshot.error : 'we\'re cool' )
+              ],
             ),
           );
         });
+  }
+
+  //Build some text feilds widgets and link them to the country and date pickers
+
+  Widget submitButton(UserBloc userBloc) {
+    return StreamBuilder(
+      stream: userBloc.validatedSignUp,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return RaisedButton(
+          onPressed: snapshot.hasData
+              ? () {
+                  userBloc.submitSignUp(context);
+                }
+              : null,
+          child: Text('Sign Up!'),
+        );
+      },
+    );
   }
 }
