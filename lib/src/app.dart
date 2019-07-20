@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: newspaperTheme,
       home: UserBlocProvider(
-        child: Login(),
+        child: Register(),
       ),
       initialRoute: '/',
       routes: allRoutes,

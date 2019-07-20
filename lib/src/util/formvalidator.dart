@@ -10,6 +10,7 @@ class FormValidation {
     if (fullName.length < 4) {
       sink.addError('Name minimum length is 4 characters');
     } else { 
+      //print(fullName);
       sink.add(fullName);
     }
   });

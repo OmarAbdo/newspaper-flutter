@@ -25,18 +25,18 @@ class UserBloc extends Object with FormValidation {
         return true;
       }
     });
-  Observable<String> get userCountryStream        => _userCountry.stream.transform(validateContrySelected);
-  Observable<DateTime> get userBirthDay           => _userBirthDay.stream.transform(validateBirthday);
-  Observable<bool> get validatedSignUp            => Observable.combineLatest4(
+  Observable<String>   get userCountryStream    => _userCountry.stream.transform(validateContrySelected);
+  Observable<DateTime> get userBirthDay         => _userBirthDay.stream.transform(validateBirthday);
+  Observable<bool>     get validatedSignUp      => Observable.combineLatest6(
                                                                   userFullNameStream, 
                                                                   userEmailAddress,
                                                                   userPasswordStream,
                                                                   userRepeatPasswordStream,
-                                                                  //userCountryStream,
-                                                                  // userBirthDay,
-                                                                  (a, b, c, d) => true);
+                                                                  userCountryStream,
+                                                                   userBirthDay,
+                                                                  (a, b, c, d, e ,f) => true);
 
-  Observable<bool> get validatedSignIn            => Observable.combineLatest2(userEmailAddress, userPasswordStream, (a, b) => true);
+  Observable<bool> get validatedSignIn          => Observable.combineLatest2(userEmailAddress, userPasswordStream, (a, b) => true);
 
   Function get changeUserFullName       => _userFullName.sink.add; // Sink
   Function get changeUserEmailAddress   => _userEmailAddress.sink.add;
@@ -49,11 +49,13 @@ class UserBloc extends Object with FormValidation {
   }
 
   String fixBirthdayFormat(DateTime birthday) {
+    print('this is ' + birthday.toString()); //debugging
     var myDay   = birthday.day <= 9 ? "0" + birthday.day.toString() : birthday.day.toString();
     var myMonth = birthday.month <= 9 ? "0" + birthday.month.toString() : birthday.month.toString();
     var myYear  = birthday.year.toString();
     return myDay + '/' + myMonth + '/' + myYear;
   }
+
 
   submitSignUp(BuildContext context) async {
     Map<String, dynamic> validatedUserMap = {
@@ -63,6 +65,7 @@ class UserBloc extends Object with FormValidation {
       'repeatPassword'  : _userRepeatPassword.value,
       'country'         : _userCountry.value,
       'birthday'        : fixBirthdayFormat(_userBirthDay.value), //find a more proper solution for this later  
+      //'birthday'        : '01/11/1997', //find a more proper solution for this later  
     };    
 
     Map<String, dynamic> postResult = await _repository.registerUser(validatedUserMap); 
@@ -73,9 +76,19 @@ class UserBloc extends Object with FormValidation {
     await storage.write(key: 'token', value: postResult['token']);
 
     Navigator.pushReplacementNamed(context, '/profile');
+
+    //debug
+    // print({
+    //   'name'            : _userFullName.value,
+    //   'email'           : _userEmailAddress.value,
+    //   'password'        : _userPassword.value,
+    //   'repeatPassword'  : _userRepeatPassword.value,
+    //   'country'         : _userCountry.value,
+    //   'birthday'        : fixBirthdayFormat(_userBirthDay.value), //find a more proper solution for this later  
+    // });
   }
 
-  submitLogIn(BuildContext context) async {
+   submitLogIn(BuildContext context) async {
     Map<String, dynamic> validatedUserMap = {
       'email'           : _userEmailAddress.value,
       'password'        : _userPassword.value,
@@ -90,6 +103,11 @@ class UserBloc extends Object with FormValidation {
     await storage.write(key: 'token', value: postResult['token']);
 
     Navigator.pushReplacementNamed(context, '/profile');
+    //Debug
+    //  print({
+    //   'email'           : _userEmailAddress.value,
+    //   'password'        : _userPassword.value,
+    // });
   }
 
   loginCheck() {

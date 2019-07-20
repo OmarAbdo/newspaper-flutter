@@ -77,7 +77,7 @@ class _RegisterState extends State<Register> {
               submitButton(userBloc),
               RaisedButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/');
+                  Navigator.pushReplacementNamed(context, '/login');
                 },
                 child: Text('Already have an account?'),
               ),
@@ -113,13 +113,15 @@ class _RegisterState extends State<Register> {
       onChange: (dateTime, List<int> index) {
         setState(() {
           _dateTime = dateTime;
+          userBloc.changeUserBirthday(dateTime);
+          print('this is the date on change' + _dateTime.toString());
         });
       },
       onConfirm: (dateTime, List<int> index) {
         setState(() {
           _dateTime = dateTime;
           userBloc.changeUserBirthday(dateTime);
-          //print('this is the date' + _dateTime.toString());
+          print('this is the date on confirm' + _dateTime.toString());
         });
       },
     );
@@ -134,7 +136,7 @@ class _RegisterState extends State<Register> {
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
               hintText: 'Please Enter your fullname',
-              labelText: 'Full Name',
+              labelText: snapshot.data,
               errorText: snapshot.error,
             ),
           );
@@ -177,9 +179,8 @@ class _RegisterState extends State<Register> {
                     });
                   },
                   selectedCountry: _selected,
-                 
                 ),
-                Text(snapshot.hasError ? snapshot.error : 'we\'re cool' )
+                Text(snapshot.hasError ? snapshot.error : 'we\'re cool')
               ],
             ),
           );
@@ -187,7 +188,6 @@ class _RegisterState extends State<Register> {
   }
 
   //Build some text feilds widgets and link them to the country and date pickers
-
   Widget submitButton(UserBloc userBloc) {
     return StreamBuilder(
       stream: userBloc.validatedSignUp,

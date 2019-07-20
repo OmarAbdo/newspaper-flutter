@@ -30,7 +30,7 @@ class Login extends StatelessWidget {
               ),
               RaisedButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/signup');
+                  Navigator.pushReplacementNamed(context, '/');
                 },
                 child: Text('Create a new account'),
               ),
